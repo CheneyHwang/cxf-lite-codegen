@@ -12,6 +12,15 @@
     <artifactId>cxf-lite-codegen</artifactId>
     <name>cxf-lite-codegen</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen</artifactId>
+            <version>${swagger-codegen-version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -97,6 +106,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>net.revelc.code</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Point at the eclipse-formatter.xml in the swagger-codegen parent project directory -->
+                    <configFile>${project.basedir}${file.separator}${project.parent.relativePath}${file.separator}eclipse-formatter.xml</configFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>

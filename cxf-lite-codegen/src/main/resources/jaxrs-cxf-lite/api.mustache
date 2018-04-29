@@ -1,28 +1,60 @@
+package {{package}};
 
-# This is a sample api mustache template.  It is representing a ficticous 
-# language and won't be usable or compile to anything without lots of changes.
-# Use it as an example.  You can access the variables in the generator object
-# like such:
+{{#imports}}import {{import}};
+{{/imports}}
 
-# use the package from the `apiPackage` variable
-package: {{package}}
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
+import org.apache.cxf.jaxrs.ext.multipart.*;
 
-# operations block
+{{#useBeanValidation}}
+import javax.validation.constraints.*;
+import javax.validation.Valid;
+{{/useBeanValidation}}
+
+{{#appName}}
+/**
+ * {{{appName}}}
+ *
+ {{#appDescription}}
+ * <p>{{{appDescription}}}
+ *
+ {{/appDescription}}
+ */
+{{/appName}}
+@Path("{{^useAnnotatedBasePath}}/{{/useAnnotatedBasePath}}{{#useAnnotatedBasePath}}{{contextPath}}{{/useAnnotatedBasePath}}")
+{{#addConsumesProducesJson}}
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+{{/addConsumesProducesJson}}
+public interface {{classname}}  {
 {{#operations}}
-classname: {{classname}}
-
-# loop over each operation in the API:
 {{#operation}}
 
-# each operation has an `operationId`:
-operationId: {{operationId}}
-
-# and parameters:
-{{#allParams}}
-{{paramName}}: {{dataType}}
-{{/allParams}}
-
+    {{#summary}}
+    /**
+     * {{summary}}
+     *
+     {{#notes}}
+     * {{notes}}
+     *
+     {{/notes}}
+     */
+    {{/summary}}
+    @{{httpMethod}}
+    {{#subresourceOperation}}@Path("{{{path}}}"){{/subresourceOperation}}
+{{#hasConsumes}}
+    @Consumes({ {{#consumes}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} })
+{{/hasConsumes}}
+{{#hasProduces}}
+    @Produces({ {{#produces}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/produces}} })
+{{/hasProduces}}
+    public {{>returnTypes}} {{nickname}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 {{/operation}}
-
-# end of operations block
 {{/operations}}
+}
