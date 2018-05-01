@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
 
     <build>
-        <finalName>cxf-lite-codegen-cli</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

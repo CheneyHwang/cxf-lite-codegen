@@ -36,6 +36,16 @@
             <artifactId>swagger-codegen</artifactId>
             <version>${swagger-codegen-version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.mine</groupId>
+            <artifactId>cxf-lite-codegen</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>

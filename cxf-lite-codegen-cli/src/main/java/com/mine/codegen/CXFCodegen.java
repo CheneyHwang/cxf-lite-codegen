@@ -22,10 +22,10 @@ public class CXFCodegen {
         String version = Version.readVersionFromResources();
         @SuppressWarnings("unchecked")
         Cli.CliBuilder<Runnable> builder =
-                Cli.<Runnable>builder("swagger-codegen-cli")
+                Cli.<Runnable>builder("cxf-lite-codegen-cli")
                         .withDescription(
                                 String.format(
-                                        "Swagger code generator CLI (version %s). More info on swagger.io",
+                                        "CXF-lite code generator CLI (version %s). More info on swagger.io",
                                         version))
                         .withDefaultCommand(Langs.class)
                         .withCommands(Generate.class, Langs.class, Help.class,

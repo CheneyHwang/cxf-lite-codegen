@@ -9,18 +9,10 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.model.wadl.Description;
-import org.apache.cxf.jaxrs.model.wadl.DocTarget;
 
 import org.apache.cxf.jaxrs.ext.multipart.*;
-{{#useSpringAnnotationConfig}}
 import org.springframework.stereotype.Service;
-{{/useSpringAnnotationConfig}}
 
-{{#useSpringAnnotationConfig}}
-@Service("{{classname}}")
-{{/useSpringAnnotationConfig}}
 {{#description}}
 {{/description}}
 {{#appName}}
@@ -33,6 +25,7 @@ import org.springframework.stereotype.Service;
  *
  */
 {{/appName}}
+@Service
 public class {{classname}}ServiceImpl implements {{classname}} {
 {{#operations}}
 {{#operation}}

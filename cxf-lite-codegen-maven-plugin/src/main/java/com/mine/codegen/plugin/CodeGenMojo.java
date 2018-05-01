@@ -1,21 +1,26 @@
-package com.mine.com.mine.codegen.plugin;
+package com.mine.codegen.plugin;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
+import com.mine.util.SwaggerCombiner;
 import io.swagger.codegen.*;
+import io.swagger.codegen.auth.AuthParser;
 import io.swagger.codegen.config.CodegenConfigurator;
+import io.swagger.models.Swagger;
+import io.swagger.models.auth.AuthorizationValue;
+import io.swagger.parser.SwaggerParser;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -202,7 +207,7 @@ public class CodeGenMojo extends AbstractMojo {
      * A map of reserved names and how they should be escaped
      */
     @Parameter(name = "reservedWordsMappings")
-    private List<String> reservedWordsMappings;    
+    private List<String> reservedWordsMappings;
 
     /**
      * Generate the apis
@@ -291,8 +296,6 @@ public class CodeGenMojo extends AbstractMojo {
      */
     @Parameter(readonly = true, required = true, defaultValue = "${project}")
     private MavenProject project;
-
-
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -494,6 +497,24 @@ public class CodeGenMojo extends AbstractMojo {
         }
 
         final ClientOptInput input = configurator.toClientOptInput();
+        // substitude swagger of input if inputSpec is a directory
+        File resources = new File(this.inputSpec);
+        if (resources.isDirectory()) {
+            List<AuthorizationValue> authorizationValues = AuthParser.parse(this.auth);
+            SwaggerCombiner combiner = new SwaggerCombiner();
+            Swagger swagger = null;
+
+            File[] files = new File(this.inputSpec).listFiles();
+            for (final File file : files) {
+                if (file.isFile()) {
+                    swagger = (new SwaggerParser()).read(file.getPath(), authorizationValues, true);
+                    combiner.combine(swagger);
+                }
+            }
+
+            input.setSwagger(combiner);
+        }
+
         final CodegenConfig config = input.getConfig();
 
         if (configOptions != null) {
